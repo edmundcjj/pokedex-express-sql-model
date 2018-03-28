@@ -44,8 +44,8 @@ module.exports = (dbPool) => {
     login: (user, callback) => {
       // TODO: Add logic here
       // set up query
-      const queryString = 'SELECT * from users WHERE name=$1';
-      const values = [user.name];
+      const queryString = 'SELECT * from users WHERE email=$1';
+      const values = [user.email];
 
       // execute query
       dbPool.query(queryString, values, (error, queryResult) => {
@@ -61,6 +61,6 @@ module.exports = (dbPool) => {
       });
     }
 
-    
+
   };
 };
