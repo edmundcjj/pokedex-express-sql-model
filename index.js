@@ -33,6 +33,7 @@ app.set('view engine', 'handlebars');
 require('./routes')(app, db);
 
 // Root GET request (it doesn't belong in any controller file)
+// To display the list of pokemon names for the default page
 app.get('/', (request, response) => {
   let loggedIn = request.cookies['loggedIn'];
   let username = request.cookies['username'];

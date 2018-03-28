@@ -3,6 +3,7 @@
  * Controller logic
  * ===========================================
  */
+// Logic to retrieve data of a specific pokemon and display on the page
 const get = (db) => {
   return (request, response) => {
     // use pokemon model method `get` to retrieve pokemon data
@@ -19,22 +20,52 @@ const get = (db) => {
   };
 };
 
+// Retrieve data of a specific pokemon and render into the fields of the update form
 const updateForm = (db) => {
   return (request, response) => {
     // TODO: Add logic here
+    // use pokemon model method `get` to retrieve pokemon data
+    db.pokemon.get(request.params.id, (error, queryResult) => {
+      console.log(queryResult.rows[0]);
+      // queryResult contains pokemon data returned from the pokemon model
+      if (error) {
+        console.error('error getting pokemon:', error);
+        response.sendStatus(500);
+      } else {
+        // render pokemon.handlebars in the pokemon folder
+        response.render('pokemon/edit', { pokemon: queryResult.rows[0] });
+      }
+    });
   };
 };
 
+// Update data of existing pokemon from the update form
 const update = (db) => {
   return (request, response) => {
     // TODO: Add logic here
+    // use pokemon model method 'update' to update a specific stats of a pokemon
+    db.pokemon.update(request.body, (error, queryResult) => {
+      console.log("Controller - updating in progress...");
+      let poke_id = request.params.id;
+
+      if (error) {
+        console.error('error updating pokemon:', error);
+        response.sendStatus(500);
+      } else {
+        // redirect back to display updated stats of a specific pokemon
+        console.log("Controller - update finished...");
+        response.redirect('/pokemons/' + poke_id);
+      }
+    });
   };
 };
 
+// Render the create form to create new pokemon
 const createForm = (request, response) => {
   response.render('pokemon/new');
 };
 
+// Logic to create the new pokemon
 const create = (db) => {
   return (request, response) => {
     // use pokemon model method `create` to create new pokemon entry in db
