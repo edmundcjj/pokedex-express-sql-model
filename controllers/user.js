@@ -3,10 +3,12 @@
  * Controller logic
  * ===========================================
  */
+// Render the form to create new users
 const newForm = (request, response) => {
   response.render('user/new');
 };
 
+// Logic to create new user
 const create = (db) => {
   return (request, response) => {
     // use user model method `create` to create new user entry in db
@@ -36,19 +38,41 @@ const create = (db) => {
   };
 };
 
+// Logic to clear cookies when user logouts and redirect back to home
 const logout = (request, response) => {
   response.clearCookie('loggedIn');
+  response.clearCookie('username');
   response.redirect(301, '/');
 };
 
+// Logic to render the form for user login
 const loginForm = (request, response) => {
-  response.render('user/login');
+  // Redirect user back to the default page if user is already logged in
+  if (request.cookies['loggedIn'] == 'true') {
+    response.redirect('/');
+  } else {
+    response.render('user/login');
+  }
 };
 
-const login = (request, response) => {
-  // TODO: Add logic here
-  // Hint: All SQL queries should happen in the corresponding model file
-  // ie. in models/user.js - which method should this controller call on the model?
+// Logic to verify user login details
+const login = (db) => {
+  return (request, response) => {
+    db.user.create(request.body, (error, queryResult) => {
+      // User verified, redirect back to default page
+      if (queryResult) {
+        let user_name = request.body.name;
+        response.cookie('loggedIn', true);
+        response.cookie('username', user_name);
+        response.redirect('/');
+      }
+      // User not verified, redirect back to the login page
+      else{
+        console.log("Unsuccessful Login...");
+        response.redirect('/users/login');
+      }
+    });
+  };
 };
 
 /**

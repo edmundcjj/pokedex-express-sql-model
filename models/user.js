@@ -43,6 +43,24 @@ module.exports = (dbPool) => {
 
     login: (user, callback) => {
       // TODO: Add logic here
+      // set up query
+      const queryString = 'SELECT * from users WHERE name=$1';
+      const values = [user.name];
+
+      // execute query
+      dbPool.query(queryString, values, (error, queryResult) => {
+        // Compare password entered by user versus password in the database
+        bcrypt.compare(user.password, queryResult.rows[0].password, (err, res) => {
+          if (res) {
+            callback(true);
+          }
+          else {
+            callback(false);
+          }
+        });
+      });
     }
+
+    
   };
 };
