@@ -5,8 +5,9 @@ const user = require('./models/user');
 const configs = {
   user: 'postgres',
   host: '127.0.0.1',
-  database: 'pokemons',
-  port: 5432
+  database: 'pokemon',
+  port: 5432,
+  password: 'edmund92chow'
 };
 
 const pool = new pg.Pool(configs);
