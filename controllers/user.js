@@ -58,7 +58,7 @@ const loginForm = (request, response) => {
 // Logic to verify user login details
 const login = (db) => {
   return (request, response) => {
-    db.user.create(request.body, (error, queryResult) => {
+    db.user.login(request.body, (error, queryResult) => {
       // User verified, redirect back to default page
       if (queryResult) {
         let user_name = request.body.name;
